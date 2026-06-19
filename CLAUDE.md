@@ -29,7 +29,7 @@ Final-year project (Group 07). Target: IEEE conference paper + live demo.
 - `backend/problems`    problem bank + test cases (CRUD)
 - `backend/runner`      sandboxed code execution        (Phase 2 ✓)
 - `backend/submissions` submit + grade + history         (Phase 2 ✓)
-- `backend/diagnosis`   AST + ML + LLM hybrid engine     (Phase 3)
+- `backend/diagnosis`   AST + LLM hybrid engine          (Phase 3 ✓)
 - `backend/profile`     misconception log + knowledge tracing (Phase 4)
 - `backend/teacher`     class aggregation dashboards     (Phase 5)
 - `backend/models`      SQLAlchemy models (all 7 Phase-1 tables)
@@ -68,10 +68,22 @@ npm run dev
 - **Branches:** one feature branch per phase.
 
 ## Current Phase
-**Phase 2 — Submit + Grade (DONE).** Monaco editor on the problem page, a
-subprocess+timeout code runner (`backend/runner`), submit endpoint that grades
-against all test cases and saves a `Submission`, live results panel, and
-per-problem submission history. Next up: **Phase 3 — Diagnosis Engine**.
+**Phase 3 — Diagnosis Engine (DONE).** When a submission fails, the hybrid
+engine (`backend/diagnosis`) names the misconception behind it and serves the
+linked micro-lesson. Pipeline: `ast_analyzer` (structural patterns + runtime-
+error signatures → candidate misconceptions with confidence) + `llm_client`
+(Gemini `gemini-2.5-flash` via REST, structured JSON) + `verifier` (agreement →
+high confidence; strong AST signal trusted; disagreement flagged). `engine`
+looks up the `Misconception` by `code`, attaches its lesson, and the submit
+endpoint stores `submission.misconception_id` and returns `diagnosis`. Frontend
+shows a `DiagnosisCard` (confidence badge, explanation, fix hint, expandable
+micro-lesson + worked example). Next up: **Phase 4 — Personalization**.
+
+LLM notes: `GEMINI_API_KEY` + `GEMINI_MODEL` live in `backend/.env` (gitignored).
+The LLM is never a hard dependency — any failure (no key, network, rate-limit,
+bad JSON) falls back to AST-only diagnosis. `LLM_PROVIDER` switch leaves room
+for Ollama in dev later. The ML-classifier vote from the original 3-way design
+is deferred until the pilot yields labelled data (AST+LLM hybrid ships now).
 
 Runner notes: each submission runs in an isolated `python -I` subprocess with a
 5s wall-clock timeout per test. On Linux/Render it also applies RLIMIT_AS (256MB)
@@ -82,7 +94,7 @@ the client. Endpoints: `POST /api/problems/<slug>/submit`, `GET /api/submissions
 ### Roadmap (6 phases / ~6 months)
 1. **Foundation** (wk 1–4) — done
 2. **Submit + Grade** (wk 5–7) — done — Monaco editor, sandboxed runner, pass/fail
-3. **Diagnosis Engine** (wk 8–12) — AST matchers + LLM + hybrid verifier (research core)
+3. **Diagnosis Engine** (wk 8–12) — done — AST matchers + Gemini + hybrid verifier
 4. **Personalization** (wk 13–16) — misconception log, knowledge tracing, recommender
 5. **Teacher Dashboard + Pilot** (wk 17–20) — aggregation views + user study
 6. **Deployment + Paper** (wk 21–24) — Render/Vercel, IEEE paper, demo video

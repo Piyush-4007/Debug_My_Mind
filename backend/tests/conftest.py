@@ -1,3 +1,9 @@
+import os
+
+# Disable the LLM in tests so the suite is deterministic and offline. Set before
+# importing app so load_dotenv (override=False) won't re-enable Gemini.
+os.environ["LLM_PROVIDER"] = "disabled"
+
 import pytest
 
 from app import create_app
