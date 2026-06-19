@@ -4,6 +4,7 @@ from __future__ import annotations
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import get_jwt_identity, jwt_required
 
+from diagnosis import diagnose_submission
 from extensions import db
 from models import Problem, Submission
 from runner import run_submission
@@ -40,12 +41,29 @@ def submit(slug: str):
         passed_count=outcome["passed_count"],
         total_count=outcome["total_count"],
     )
+
+    # Phase 3: diagnose the misconception behind a failing submission.
+    diagnosis = None
+    if outcome["status"] != "passed":
+        diagnosis = diagnose_submission(
+            code,
+            {"title": problem.title, "description": problem.description},
+            outcome["results"],
+        )
+        # General-feedback diagnoses have no catalogued misconception.
+        if diagnosis and diagnosis.get("misconception"):
+            submission.misconception_id = diagnosis["misconception"]["id"]
+
     db.session.add(submission)
     db.session.commit()
 
     # Per-test results are returned live but not persisted in Phase 2.
     return (
-        jsonify(submission=submission.to_dict(), results=outcome["results"]),
+        jsonify(
+            submission=submission.to_dict(),
+            results=outcome["results"],
+            diagnosis=diagnosis,
+        ),
         201,
     )
 

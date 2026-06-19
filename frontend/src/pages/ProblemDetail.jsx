@@ -4,6 +4,7 @@ import Editor from "@monaco-editor/react";
 import api, { apiError } from "../api/client";
 import Navbar from "../components/Navbar";
 import ResultsPanel from "../components/ResultsPanel";
+import DiagnosisCard from "../components/DiagnosisCard";
 import SubmissionHistory from "../components/SubmissionHistory";
 
 export default function ProblemDetail() {
@@ -11,6 +12,7 @@ export default function ProblemDetail() {
   const [problem, setProblem] = useState(null);
   const [code, setCode] = useState("");
   const [results, setResults] = useState(null);
+  const [diagnosis, setDiagnosis] = useState(null);
   const [submission, setSubmission] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -20,6 +22,7 @@ export default function ProblemDetail() {
   useEffect(() => {
     setLoading(true);
     setResults(null);
+    setDiagnosis(null);
     api
       .get(`/api/problems/${slug}`)
       .then((res) => {
@@ -34,9 +37,11 @@ export default function ProblemDetail() {
     setSubmitting(true);
     setError("");
     setResults(null);
+    setDiagnosis(null);
     try {
       const res = await api.post(`/api/problems/${slug}/submit`, { code });
       setResults(res.data.results);
+      setDiagnosis(res.data.diagnosis);
       setSubmission(res.data.submission);
       setHistoryKey((k) => k + 1);
     } catch (err) {
@@ -152,6 +157,7 @@ export default function ProblemDetail() {
               </div>
 
               <ResultsPanel results={results} submission={submission} />
+              <DiagnosisCard diagnosis={diagnosis} />
             </section>
           </div>
         )}
