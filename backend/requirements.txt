@@ -1,0 +1,14 @@
+Flask==3.1.0
+Flask-SQLAlchemy==3.1.1
+Flask-JWT-Extended==4.7.1
+Flask-Cors==5.0.0
+python-dotenv==1.0.1
+SQLAlchemy==2.0.36
+email-validator==2.2.0
+
+# Production-only (Postgres + WSGI server). Harmless to install in dev.
+psycopg2-binary==2.9.10
+gunicorn==23.0.0
+
+# Dev / test
+pytest==8.3.4
