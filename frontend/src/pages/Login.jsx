@@ -30,23 +30,17 @@ export default function Login() {
       <form onSubmit={handleSubmit} className="space-y-4">
         <Field label="Email" type="email" value={email} onChange={setEmail} />
         <Field label="Password" type="password" value={password} onChange={setPassword} />
-        {error && <p className="text-sm font-medium text-red-600">{error}</p>}
-        <button
-          type="submit"
-          disabled={busy}
-          className="w-full rounded-lg bg-brand-maroon py-2.5 font-semibold text-white transition hover:bg-brand-pink disabled:opacity-60"
-        >
-          {busy ? "Logging in…" : "Log in"}
-        </button>
+        {error && <ErrorNote>{error}</ErrorNote>}
+        <SubmitButton busy={busy}>{busy ? "Logging in…" : "Log in"}</SubmitButton>
       </form>
-      <p className="mt-4 text-center text-sm text-brand-rose">
+      <p className="mt-5 text-center text-sm text-muted">
         No account?{" "}
-        <Link to="/signup" className="font-semibold text-brand-pink hover:underline">
+        <Link to="/signup" className="font-semibold text-violet-bright hover:underline">
           Sign up
         </Link>
       </p>
-      <p className="mt-2 text-center text-xs text-brand-rose/70">
-        Demo: student@demo.dev / password
+      <p className="mt-2 text-center text-xs text-faint">
+        Demo: student@demo.dev · password
       </p>
     </AuthShell>
   );
@@ -55,28 +49,59 @@ export default function Login() {
 export function AuthShell({ title, subtitle, children }) {
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
-      <div className="w-full max-w-md rounded-2xl border border-brand-pink/20 bg-white p-8 shadow-sm">
-        <h1 className="font-display text-3xl font-bold text-brand-maroon">DebugMyMind</h1>
-        <p className="mt-1 text-lg font-semibold text-brand-ink">{title}</p>
-        <p className="mb-6 text-sm text-brand-rose">{subtitle}</p>
-        {children}
+      <div className="animate-rise w-full max-w-md">
+        <div className="mb-6 text-center">
+          <span className="mx-auto mb-3 grid h-12 w-12 place-items-center rounded-xl bg-grad-violet font-display text-lg font-extrabold text-white glow-violet">
+            D
+          </span>
+          <h1 className="font-display text-3xl font-extrabold tracking-tight">
+            Debug<span className="text-gradient">MyMind</span>
+          </h1>
+        </div>
+        <div className="card p-8">
+          <p className="text-lg font-semibold text-ink">{title}</p>
+          <p className="mb-6 text-sm text-muted">{subtitle}</p>
+          {children}
+        </div>
       </div>
     </div>
   );
 }
 
-export function Field({ label, type = "text", value, onChange, ...rest }) {
+export function Field({ label, type = "text", value, onChange, children, ...rest }) {
   return (
     <label className="block">
-      <span className="mb-1 block text-sm font-medium text-brand-ink">{label}</span>
-      <input
-        type={type}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        required
-        className="w-full rounded-lg border border-brand-pink/30 bg-brand-cream px-3 py-2 text-brand-ink outline-none focus:border-brand-pink focus:ring-2 focus:ring-brand-pink/30"
-        {...rest}
-      />
+      <span className="mb-1.5 block text-sm font-medium text-muted">{label}</span>
+      {children || (
+        <input
+          type={type}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          required
+          className="w-full rounded-lg border border-line bg-bg-soft px-3 py-2.5 text-ink outline-none transition focus:border-violet/60 focus:ring-2 focus:ring-violet/25"
+          {...rest}
+        />
+      )}
     </label>
+  );
+}
+
+export function ErrorNote({ children }) {
+  return (
+    <p className="rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm font-medium text-red-300">
+      {children}
+    </p>
+  );
+}
+
+export function SubmitButton({ busy, children }) {
+  return (
+    <button
+      type="submit"
+      disabled={busy}
+      className="w-full rounded-lg bg-grad-violet py-2.5 font-semibold text-white shadow-lg transition hover:opacity-95 hover:glow-violet disabled:opacity-60"
+    >
+      {children}
+    </button>
   );
 }

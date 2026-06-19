@@ -33,6 +33,7 @@ def list_problems():
                 "title": p.title,
                 "concept": p.concept,
                 "difficulty": p.difficulty,
+                "languages": p.languages or ["python"],
             }
             for p in problems
         ]

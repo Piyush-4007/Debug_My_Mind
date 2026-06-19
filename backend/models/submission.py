@@ -21,6 +21,8 @@ class Submission(TimestampMixin, db.Model):
         db.Integer, db.ForeignKey("problems.id", ondelete="CASCADE"), nullable=False
     )
     code = db.Column(db.Text, nullable=False)
+    # "python" | "java"
+    language = db.Column(db.String(20), nullable=False, default="python")
     # "pending" | "passed" | "failed" | "error"
     status = db.Column(db.String(20), nullable=False, default="pending")
     passed_count = db.Column(db.Integer, nullable=False, default=0)
@@ -41,6 +43,7 @@ class Submission(TimestampMixin, db.Model):
             "user_id": self.user_id,
             "problem_id": self.problem_id,
             "code": self.code,
+            "language": self.language,
             "status": self.status,
             "passed_count": self.passed_count,
             "total_count": self.total_count,

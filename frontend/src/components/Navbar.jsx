@@ -11,22 +11,28 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="border-b-2 border-brand-pink/30 bg-white">
-      <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-3">
-        <Link to="/" className="font-display text-2xl font-bold text-brand-maroon">
-          DebugMyMind
+    <nav className="sticky top-0 z-20 border-b border-line/80 bg-bg/70 backdrop-blur-xl">
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
+        <Link to="/" className="flex items-center gap-2.5">
+          <span className="grid h-8 w-8 place-items-center rounded-lg bg-grad-violet font-display text-sm font-extrabold text-white shadow-lg">
+            D
+          </span>
+          <span className="font-display text-xl font-extrabold tracking-tight">
+            Debug<span className="text-gradient">MyMind</span>
+          </span>
         </Link>
+
         {user && (
-          <div className="flex items-center gap-4 text-sm">
-            <span className="text-brand-rose">
-              {user.name}
-              <span className="ml-2 rounded-full bg-brand-pink/10 px-2 py-0.5 text-xs font-semibold text-brand-pink">
+          <div className="flex items-center gap-3 text-sm">
+            <div className="hidden items-center gap-2 sm:flex">
+              <span className="text-muted">{user.name}</span>
+              <span className="rounded-full border border-violet/30 bg-violet/10 px-2 py-0.5 text-xs font-semibold capitalize text-violet-bright">
                 {user.role}
               </span>
-            </span>
+            </div>
             <button
               onClick={handleLogout}
-              className="rounded-md border border-brand-pink px-3 py-1 font-medium text-brand-pink transition hover:bg-brand-pink hover:text-white"
+              className="rounded-lg border border-line px-3 py-1.5 font-medium text-muted transition hover:border-violet/50 hover:text-ink"
             >
               Log out
             </button>

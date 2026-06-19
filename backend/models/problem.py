@@ -15,8 +15,13 @@ class Problem(TimestampMixin, db.Model):
     concept = db.Column(db.String(60), nullable=False, index=True)
     # "easy" | "medium" | "hard"
     difficulty = db.Column(db.String(20), nullable=False, default="easy")
-    # signature/stub shown in the editor (Phase 2 uses this in Monaco)
+    # Per-language starter stubs shown in the Monaco editor. Tests are
+    # language-agnostic (stdin/stdout), so one problem is solvable in either
+    # language. `starter_code` is the Python stub (kept for back-compat).
     starter_code = db.Column(db.Text, nullable=False, default="")
+    starter_code_java = db.Column(db.Text, nullable=False, default="")
+    # Languages this problem can be solved in, e.g. ["python", "java"].
+    languages = db.Column(db.JSON, nullable=False, default=lambda: ["python"])
 
     test_cases = db.relationship(
         "TestCase",
@@ -41,7 +46,12 @@ class Problem(TimestampMixin, db.Model):
             "description": self.description,
             "concept": self.concept,
             "difficulty": self.difficulty,
-            "starter_code": self.starter_code,
+            "languages": self.languages or ["python"],
+            "starter_code": self.starter_code,  # python (back-compat)
+            "starter_codes": {
+                "python": self.starter_code,
+                "java": self.starter_code_java,
+            },
             "test_cases": visible,
             "test_case_count": len(self.test_cases),
         }

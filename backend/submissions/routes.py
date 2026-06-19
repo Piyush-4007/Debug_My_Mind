@@ -24,19 +24,23 @@ def submit(slug: str):
 
     data = request.get_json(silent=True) or {}
     code = data.get("code") or ""
+    language = (data.get("language") or "python").lower()
     if not code.strip():
         return jsonify(error="code is required"), 400
     if len(code) > MAX_CODE_CHARS:
         return jsonify(error="code is too long"), 413
+    if language not in (problem.languages or ["python"]):
+        return jsonify(error=f"this problem does not support {language}"), 400
     if not problem.test_cases:
         return jsonify(error="this problem has no test cases yet"), 422
 
-    outcome = run_submission(code, problem.test_cases)
+    outcome = run_submission(code, problem.test_cases, language=language)
 
     submission = Submission(
         user_id=user_id,
         problem_id=problem.id,
         code=code,
+        language=language,
         status=outcome["status"],
         passed_count=outcome["passed_count"],
         total_count=outcome["total_count"],
@@ -49,6 +53,7 @@ def submit(slug: str):
             code,
             {"title": problem.title, "description": problem.description},
             outcome["results"],
+            language=language,
         )
         # General-feedback diagnoses have no catalogued misconception.
         if diagnosis and diagnosis.get("misconception"):
@@ -89,6 +94,7 @@ def list_submissions():
             {
                 "id": s.id,
                 "problem_id": s.problem_id,
+                "language": s.language,
                 "status": s.status,
                 "passed_count": s.passed_count,
                 "total_count": s.total_count,

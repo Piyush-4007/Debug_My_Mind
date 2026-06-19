@@ -57,6 +57,8 @@ def _seed_problems() -> int:
         p.concept = entry["concept"]
         p.difficulty = entry["difficulty"]
         p.starter_code = entry["starter_code"]
+        p.starter_code_java = entry.get("java_starter", "")
+        p.languages = entry.get("languages", ["python"])
 
         # Replace test cases wholesale (keeps seeding deterministic).
         p.test_cases.clear()
