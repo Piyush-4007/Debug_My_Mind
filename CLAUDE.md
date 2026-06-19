@@ -27,7 +27,8 @@ Final-year project (Group 07). Target: IEEE conference paper + live demo.
 ### Backend modules
 - `backend/auth`        JWT signup/login, role-based access (student/teacher)
 - `backend/problems`    problem bank + test cases (CRUD)
-- `backend/runner`      sandboxed code execution        (Phase 2)
+- `backend/runner`      sandboxed code execution        (Phase 2 ✓)
+- `backend/submissions` submit + grade + history         (Phase 2 ✓)
 - `backend/diagnosis`   AST + ML + LLM hybrid engine     (Phase 3)
 - `backend/profile`     misconception log + knowledge tracing (Phase 4)
 - `backend/teacher`     class aggregation dashboards     (Phase 5)
@@ -67,13 +68,20 @@ npm run dev
 - **Branches:** one feature branch per phase.
 
 ## Current Phase
-**Phase 1 — Foundation.** Monorepo + schema + JWT auth + problem catalog +
-starter misconception catalog. Backend serves problems; frontend lets a student
-sign up, log in, and browse/view a problem.
+**Phase 2 — Submit + Grade (DONE).** Monaco editor on the problem page, a
+subprocess+timeout code runner (`backend/runner`), submit endpoint that grades
+against all test cases and saves a `Submission`, live results panel, and
+per-problem submission history. Next up: **Phase 3 — Diagnosis Engine**.
+
+Runner notes: each submission runs in an isolated `python -I` subprocess with a
+5s wall-clock timeout per test. On Linux/Render it also applies RLIMIT_AS (256MB)
+and RLIMIT_CPU via `preexec_fn`; on Windows dev the timeout is the only guard.
+Output comparison is whitespace-forgiving. Hidden test values are never sent to
+the client. Endpoints: `POST /api/problems/<slug>/submit`, `GET /api/submissions`.
 
 ### Roadmap (6 phases / ~6 months)
-1. **Foundation** (wk 1–4) — *current*
-2. **Submit + Grade** (wk 5–7) — Monaco editor, sandboxed runner, pass/fail
+1. **Foundation** (wk 1–4) — done
+2. **Submit + Grade** (wk 5–7) — done — Monaco editor, sandboxed runner, pass/fail
 3. **Diagnosis Engine** (wk 8–12) — AST matchers + LLM + hybrid verifier (research core)
 4. **Personalization** (wk 13–16) — misconception log, knowledge tracing, recommender
 5. **Teacher Dashboard + Pilot** (wk 17–20) — aggregation views + user study
