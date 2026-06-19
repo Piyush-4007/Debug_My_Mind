@@ -35,9 +35,11 @@ def create_app(config_object: type = Config) -> Flask:
 
     from auth import auth_bp
     from problems import problems_bp
+    from submissions import submissions_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(problems_bp)
+    app.register_blueprint(submissions_bp)
 
     @app.get("/api/health")
     def health():
