@@ -100,13 +100,26 @@ the client. Endpoints: `POST /api/problems/<slug>/submit`, `GET /api/submissions
 6. **Deployment + Paper** (wk 21–24) — Render/Vercel, IEEE paper, demo video
 
 ## Locked-in Decisions
-- Language target: **Python** intro level. Java/C++ are v2 future work.
+- Language target: **Python + Java** intro level (Java added in v3.2 — overrides the
+  original "Python only" thesis scope). C++ remains future work.
 - LLM: **Gemini free tier** (prod), **Ollama** (dev). No paid Claude usage.
 - Free-tier deploy (Render + Vercel) is acceptable for the pilot.
 - Pilot: 20–40 first-year CSE volunteers, 3–4 week study.
 
 ## Forbidden Scope (until v2)
-Multi-language support · real-time collab · mobile app · gamification.
+C++ support · real-time collab · mobile app · gamification.
+(Java multi-language shipped in v3.2.)
+
+## v3.2 — Multi-language + Redesign
+Problems are language-agnostic (stdin/stdout tests), solvable in **Python or Java**
+via an editor toggle. `Problem.starter_code` (python) + `starter_code_java` +
+`languages` JSON; `Submission.language`. Runner dispatches: python `-I` subprocess
+or `javac`+`java -cp` (compile once, run each test). Diagnosis is language-aware —
+AST matchers run for Python only; Java leans on the LLM (medium confidence). 20
+seeded problems. Frontend rebuilt as a dark "code platform" (Inter/Sora/JetBrains
+Mono, violet→cyan accents, hero catalog with search/filters, language toggle).
+Known gap: catalogued micro-lesson *worked examples* are still Python even for Java
+submissions (explanation itself is Java-aware).
 
 ## Team
 - **Piyush Singh** — backend, diagnosis

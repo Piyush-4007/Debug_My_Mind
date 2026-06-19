@@ -1,18 +1,98 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Sora:wght@600;700;800&display=swap");
 @import "tailwindcss";
 
-/* DebugMyMind brand palette (from the project context doc). */
+/* DebugMyMind — modern dark "code platform" theme. */
 @theme {
-  --color-brand-maroon: #5c2a3e;
-  --color-brand-pink: #c2476a;
-  --color-brand-rose: #7a5560;
-  --color-brand-cream: #fff6f0;
-  --color-brand-ink: #2e1a1f;
-  --font-display: Georgia, "Times New Roman", serif;
+  --color-bg: #080a10;
+  --color-bg-soft: #0d1018;
+  --color-surface: #141926;
+  --color-surface-2: #1b2233;
+  --color-line: #283048;
+  --color-ink: #e8ebf5;
+  --color-muted: #8b93ab;
+  --color-faint: #5b637a;
+
+  --color-violet: #8b5cf6;
+  --color-violet-bright: #a78bfa;
+  --color-cyan: #22d3ee;
+  --color-py: #4f9cf9;
+  --color-java: #f6a13c;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Sora", "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
 
+html,
 body {
   margin: 0;
-  background-color: var(--color-brand-cream);
-  color: var(--color-brand-ink);
-  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
 }
+
+/* Ambient glow behind the page. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(60rem 40rem at 75% -10%, rgba(139, 92, 246, 0.16), transparent 60%),
+    radial-gradient(50rem 36rem at 10% 0%, rgba(34, 211, 238, 0.1), transparent 55%);
+  pointer-events: none;
+}
+
+@layer utilities {
+  .text-gradient {
+    background: linear-gradient(100deg, var(--color-violet-bright), var(--color-cyan));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .bg-grad-violet {
+    background-image: linear-gradient(100deg, #7c5cff, #a78bfa 55%, #22d3ee 130%);
+  }
+  .glow-violet {
+    box-shadow: 0 0 0 1px rgba(139, 92, 246, 0.35), 0 8px 30px -8px rgba(139, 92, 246, 0.55);
+  }
+  .card {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent),
+      var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-radius: 1rem;
+  }
+  .card-hover {
+    transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+  }
+  .card-hover:hover {
+    transform: translateY(-3px);
+    border-color: rgba(139, 92, 246, 0.55);
+    box-shadow: 0 12px 40px -16px rgba(139, 92, 246, 0.45);
+  }
+  .animate-rise {
+    animation: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Inputs / selects default dark styling. */
+input,
+select,
+textarea {
+  color-scheme: dark;
+}
+
+::selection {
+  background: rgba(139, 92, 246, 0.35);
+}
+
+/* Slim scrollbars to match the dark theme. */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: #2a3350; border-radius: 8px; }
+::-webkit-scrollbar-track { background: transparent; }

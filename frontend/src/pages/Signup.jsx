@@ -2,17 +2,12 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { apiError } from "../api/client";
-import { AuthShell, Field } from "./Login";
+import { AuthShell, Field, ErrorNote, SubmitButton } from "./Login";
 
 export default function Signup() {
   const { signup } = useAuth();
   const navigate = useNavigate();
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    password: "",
-    role: "student",
-  });
+  const [form, setForm] = useState({ name: "", email: "", password: "", role: "student" });
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
 
@@ -44,29 +39,22 @@ export default function Signup() {
           onChange={set("password")}
           minLength={6}
         />
-        <label className="block">
-          <span className="mb-1 block text-sm font-medium text-brand-ink">I am a</span>
+        <Field label="I am a">
           <select
             value={form.role}
             onChange={(e) => set("role")(e.target.value)}
-            className="w-full rounded-lg border border-brand-pink/30 bg-brand-cream px-3 py-2 text-brand-ink outline-none focus:border-brand-pink focus:ring-2 focus:ring-brand-pink/30"
+            className="w-full rounded-lg border border-line bg-bg-soft px-3 py-2.5 text-ink outline-none transition focus:border-violet/60 focus:ring-2 focus:ring-violet/25"
           >
             <option value="student">Student</option>
             <option value="teacher">Teacher</option>
           </select>
-        </label>
-        {error && <p className="text-sm font-medium text-red-600">{error}</p>}
-        <button
-          type="submit"
-          disabled={busy}
-          className="w-full rounded-lg bg-brand-maroon py-2.5 font-semibold text-white transition hover:bg-brand-pink disabled:opacity-60"
-        >
-          {busy ? "Creating…" : "Sign up"}
-        </button>
+        </Field>
+        {error && <ErrorNote>{error}</ErrorNote>}
+        <SubmitButton busy={busy}>{busy ? "Creating…" : "Sign up"}</SubmitButton>
       </form>
-      <p className="mt-4 text-center text-sm text-brand-rose">
+      <p className="mt-5 text-center text-sm text-muted">
         Already have an account?{" "}
-        <Link to="/login" className="font-semibold text-brand-pink hover:underline">
+        <Link to="/login" className="font-semibold text-violet-bright hover:underline">
           Log in
         </Link>
       </p>

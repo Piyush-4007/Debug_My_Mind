@@ -42,15 +42,20 @@ def _catalog() -> list[dict]:
     ]
 
 
-def diagnose_submission(code: str, problem: dict, results: list[dict]) -> dict | None:
+def diagnose_submission(code: str, problem: dict, results: list[dict],
+                        language: str = "python") -> dict | None:
     """Return a diagnosis dict (with misconception + lesson) or None."""
     try:
         error_text, failure_summary = _collect_failure(results)
 
-        ast_candidates = ast_analyzer.analyze(code, error_text)
+        # The AST matchers are Python-specific; skip them for other languages
+        # (Java leans on the LLM + runtime-error reasoning instead).
+        ast_candidates = (
+            ast_analyzer.analyze(code, error_text) if language == "python" else []
+        )
 
         catalog = _catalog()
-        llm = llm_client.llm_diagnose(code, problem, failure_summary, catalog)
+        llm = llm_client.llm_diagnose(code, problem, failure_summary, catalog, language)
 
         verdict = verifier.reconcile(ast_candidates, llm)
         misconception = (

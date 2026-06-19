@@ -26,15 +26,15 @@ MAX_ATTEMPTS = 3
 
 GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={key}"
 
-PROMPT_TEMPLATE = """You are a Python tutor diagnosing the single root misconception behind a \
+PROMPT_TEMPLATE = """You are a {language} tutor diagnosing the single root misconception behind a \
 first-year student's failing solution. Do not just restate the test failure — name the \
 underlying thinking error.
 
 PROBLEM: {title}
 {description}
 
-STUDENT CODE:
-```python
+STUDENT CODE ({language}):
+```
 {code}
 ```
 
@@ -51,11 +51,13 @@ Respond with ONLY a JSON object of this exact shape:
   "fix_hint": "<one concrete sentence on how to fix it>"}}"""
 
 
-def _build_prompt(code: str, problem: dict, failure: str, catalog: list[dict]) -> str:
+def _build_prompt(code: str, problem: dict, failure: str, catalog: list[dict],
+                  language: str = "python") -> str:
     catalog_lines = "\n".join(
         f'- {m["code"]}: {m["name"]} (concept: {m["concept"]})' for m in catalog
     )
     return PROMPT_TEMPLATE.format(
+        language=language,
         title=problem.get("title", ""),
         description=(problem.get("description", "") or "")[:1500],
         code=code[:4000],
@@ -99,14 +101,15 @@ def _call_gemini(prompt: str, timeout: int = 30) -> str | None:
     return None
 
 
-def llm_diagnose(code: str, problem: dict, failure: str, catalog: list[dict]) -> dict | None:
+def llm_diagnose(code: str, problem: dict, failure: str, catalog: list[dict],
+                 language: str = "python") -> dict | None:
     """Return {misconception_code, confidence, explanation, fix_hint} or None."""
     provider = os.getenv("LLM_PROVIDER", "gemini").strip().lower()
     if provider != "gemini":
         log.info("LLM_PROVIDER=%s not implemented yet — skipping.", provider)
         return None
 
-    raw = _call_gemini(_build_prompt(code, problem, failure, catalog))
+    raw = _call_gemini(_build_prompt(code, problem, failure, catalog, language))
     if not raw:
         return None
     try:

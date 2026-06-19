@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import api from "../api/client";
 
 const STATUS_STYLES = {
-  passed: "bg-green-100 text-green-700",
-  failed: "bg-red-100 text-red-700",
-  error: "bg-amber-100 text-amber-800",
+  passed: "border-emerald-500/40 bg-emerald-500/10 text-emerald-300",
+  failed: "border-rose-500/40 bg-rose-500/10 text-rose-300",
+  error: "border-amber-500/40 bg-amber-500/10 text-amber-300",
+  timeout: "border-amber-500/40 bg-amber-500/10 text-amber-300",
 };
 
 export default function SubmissionHistory({ slug, refreshKey }) {
@@ -21,25 +22,26 @@ export default function SubmissionHistory({ slug, refreshKey }) {
 
   return (
     <div className="mt-8">
-      <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-brand-rose">
+      <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-faint">
         Your attempts
       </h2>
       <div className="space-y-1.5">
         {subs.map((s) => (
           <div
             key={s.id}
-            className="flex items-center justify-between rounded-lg border border-brand-pink/20 bg-white px-3 py-2 text-sm"
+            className="flex items-center justify-between rounded-lg border border-line bg-surface px-3 py-2 text-sm"
           >
-            <span className="text-brand-rose">
-              {new Date(s.created_at).toLocaleString()}
+            <span className="flex items-center gap-2 text-muted">
+              <span className="font-mono text-xs text-faint">{s.language || "python"}</span>
+              <span className="text-xs">{new Date(s.created_at).toLocaleString()}</span>
             </span>
             <span className="flex items-center gap-3">
-              <span className="text-brand-ink">
+              <span className="font-mono text-ink">
                 {s.passed_count}/{s.total_count}
               </span>
               <span
-                className={`rounded-full px-2 py-0.5 text-xs font-semibold capitalize ${
-                  STATUS_STYLES[s.status] || "bg-gray-100 text-gray-600"
+                className={`rounded-full border px-2 py-0.5 text-xs font-semibold capitalize ${
+                  STATUS_STYLES[s.status] || "border-line text-muted"
                 }`}
               >
                 {s.status}
