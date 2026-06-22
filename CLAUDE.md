@@ -31,7 +31,7 @@ Final-year project (Group 07). Target: IEEE conference paper + live demo.
 - `backend/submissions` submit + grade + history         (Phase 2 ✓)
 - `backend/diagnosis`   AST + LLM hybrid engine          (Phase 3 ✓)
 - `backend/profile`     misconception log + knowledge tracing (Phase 4 ✓)
-- `backend/teacher`     class aggregation dashboards     (Phase 5)
+- `backend/teacher`     class aggregation dashboards     (Phase 5 ✓)
 - `backend/models`      SQLAlchemy models (all 7 Phase-1 tables)
 - `backend/seed`        starter problem bank + misconception catalog
 
@@ -68,7 +68,24 @@ npm run dev
 - **Branches:** one feature branch per phase.
 
 ## Current Phase
-**Phase 4 — Personalization (DONE).** `backend/profile` turns graded submissions
+**Phase 5 — Teacher Dashboard (DONE; pilot study is the team's non-code work).**
+`backend/teacher` rolls the Phase-4 per-student model up to class level. Aggregation
+(`aggregation.py`, students = users with role 'student' only): class overview
+(students/active/submissions/accuracy), per-concept cohort mastery (avg + #
+mastered, weakest first), most-common misconceptions (occurrences + students
+affected), a student roster, and a per-student drilldown. Routes (`/api/teacher/*`,
+all `@teacher_required`): `GET /overview`, `GET /students`, `GET /students/<id>`.
+Frontend `/teacher` page (teacher-only; students redirected to `/dashboard`):
+stat strip, cohort concept bars, top-misconceptions list, clickable student roster
+with a slide-in drilldown drawer. Navbar shows "Class" for teachers, "Dashboard"
+for students. Dev demo data: `flask --app app seed-cohort` fabricates 8 students
+with synthesised mastery + diagnosed submissions (no runner needed; deterministic,
+idempotent; emails like aarav@class.dev, pw 'password'). The actual **pilot user
+study** (recruiting 20–40 students, 3–4 wk) is the team's research work, not code.
+Next up: **Phase 6 — Deployment + Paper**.
+
+### Phase 4 — Personalization (DONE)
+`backend/profile` turns graded submissions
 into a per-student learning model. `tracing.py` runs **Bayesian Knowledge Tracing**
 (params p_init=.10, p_transit=.20, p_slip=.10, p_guess=.20; mastery threshold .85)
 — the submit endpoint calls `record_attempt(user_id, problem.concept, correct)`
@@ -110,7 +127,7 @@ the client. Endpoints: `POST /api/problems/<slug>/submit`, `GET /api/submissions
 2. **Submit + Grade** (wk 5–7) — done — Monaco editor, sandboxed runner, pass/fail
 3. **Diagnosis Engine** (wk 8–12) — done — AST matchers + Gemini + hybrid verifier
 4. **Personalization** (wk 13–16) — done — BKT knowledge tracing + misconception log + recommender
-5. **Teacher Dashboard + Pilot** (wk 17–20) — aggregation views + user study
+5. **Teacher Dashboard + Pilot** (wk 17–20) — dashboard done; pilot user study is team research work
 6. **Deployment + Paper** (wk 21–24) — Render/Vercel, IEEE paper, demo video
 
 ## Locked-in Decisions

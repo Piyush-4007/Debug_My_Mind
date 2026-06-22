@@ -37,11 +37,13 @@ def create_app(config_object: type = Config) -> Flask:
     from problems import problems_bp
     from submissions import submissions_bp
     from profile import profile_bp
+    from teacher import teacher_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(problems_bp)
     app.register_blueprint(submissions_bp)
     app.register_blueprint(profile_bp)
+    app.register_blueprint(teacher_bp)
 
     @app.get("/api/health")
     def health():
@@ -86,6 +88,13 @@ def _register_cli(app: Flask) -> None:
         from seed import run_seed
 
         run_seed()
+
+    @app.cli.command("seed-cohort")
+    def seed_cohort():
+        """Fabricate a demo class so the teacher dashboard has data (DEV ONLY)."""
+        from seed.cohort import run_cohort_seed
+
+        run_cohort_seed()
 
 
 # Module-level app for gunicorn ("gunicorn app:app") and `python app.py`.
