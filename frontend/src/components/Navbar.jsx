@@ -33,9 +33,15 @@ export default function Navbar() {
               <NavLink to="/" end className={navClass}>
                 Problems
               </NavLink>
-              <NavLink to="/dashboard" className={navClass}>
-                Dashboard
-              </NavLink>
+              {user.role === "teacher" ? (
+                <NavLink to="/teacher" className={navClass}>
+                  Class
+                </NavLink>
+              ) : (
+                <NavLink to="/dashboard" className={navClass}>
+                  Dashboard
+                </NavLink>
+              )}
             </div>
             <div className="hidden items-center gap-2 sm:flex">
               <span className="text-muted">{user.name}</span>
