@@ -3,11 +3,12 @@
 A complete, step-by-step walkthrough. Every click, every paste, and exactly what
 appears on screen. ~7 minutes. All data is genuine — produced by the real engine.
 
-> Note on feedback text: this script assumes **no Gemini key** (offline / dev),
-> which is the safe default for a live demo. In that mode the diagnosis card shows
-> a **green "high confidence"** badge, the misconception name, an explanation, and
-> the micro-lesson. (With a `GEMINI_API_KEY` set you additionally get a cyan
-> "Fix:" hint line and a "✓" on the badge when the AI agrees — optional.)
+> Note on feedback text: this machine has a **Gemini key configured** (in
+> `backend/.env`), so the diagnosis card shows the **full** experience: a green
+> **"high confidence ✓"** badge (AST rules and the AI tutor agree), the
+> misconception name, an explanation, a cyan **"Fix:"** hint line, and the
+> micro-lesson. If the key is ever missing/unreachable it gracefully falls back to
+> AST-only (badge without the ✓ and no Fix line) — the demo still works offline.
 
 ---
 
@@ -77,11 +78,13 @@ print(fact(n))
 - The results panel shows the run **failed** (a `RecursionError` — the function
   never stops).
 - The **🧠 "Here's what we think went wrong"** diagnosis card appears with:
-  - A green **`high confidence`** badge (top-right).
+  - A green **`high confidence ✓`** badge (top-right) — the ✓ means the AST rules
+    and the AI tutor independently agreed. **Call this out — it's the verifier, the
+    project's research contribution.**
   - Misconception: **"Recursion without a (correct) base case"** + a `recursion` tag.
-  - Explanation: *"A recursive function that never hits a terminating condition
-    recurses forever and raises RecursionError. Every recursion needs a base case
-    reached before the recursive call."*
+  - An explanation of why it recurses forever (RecursionError).
+  - A cyan **"Fix:"** hint line, e.g. *"Add an `if` statement at the beginning of
+    your `fact` function to handle the base case for n=0."*
   - An expandable **📘 Micro-lesson: "Every recursion needs a base case"** (open by
     default) with a **Worked example**:
     ```python
@@ -169,14 +172,15 @@ print(input()[::-1])
   lowest** — say: *"At a glance the teacher sees the class is weakest on recursion."*
 - **Top misconceptions** — the most common thinking errors across the class, each
   with how many students it affected. You'll see **"Recursion without a base case"**,
-  **"Indexing past the end of a list"**, **"Trying to mutate a string in place"** —
-  all genuinely diagnosed by the engine.
+  **"Off-by-one with range() on an inclusive bound"** (2 students), **"Indexing past
+  the end of a list"**, and **"Trying to mutate a string in place"** — all genuinely
+  diagnosed by the engine (AST + the Gemini tutor).
 
 ### 3.3 Drill into individual students
 - In the **Students** table, click **Ketan Bhendarkar**. A side drawer slides in:
   - Concept mastery: **recursion ~23% (0/2)** — clearly his weak spot.
-  - Misconception log: **"Recursion without a (correct) base case" ×2**, **"Trying
-    to mutate a string in place" ×1**.
+  - Misconception log: **"Recursion without a (correct) base case" ×2**, **"Off-by-one
+    with range() …" ×1**, **"Trying to mutate a string in place" ×1**.
   - Say: *"The teacher can see Ketan specifically struggles with recursion and
     exactly which misconceptions to address."*
 - Close the drawer (✕ or click outside). Now click **Piyush Singh** to contrast — a
