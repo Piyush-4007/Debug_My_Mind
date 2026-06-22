@@ -78,10 +78,14 @@ all `@teacher_required`): `GET /overview`, `GET /students`, `GET /students/<id>`
 Frontend `/teacher` page (teacher-only; students redirected to `/dashboard`):
 stat strip, cohort concept bars, top-misconceptions list, clickable student roster
 with a slide-in drilldown drawer. Navbar shows "Class" for teachers, "Dashboard"
-for students. Dev demo data: `flask --app app seed-cohort` fabricates 8 students
-with synthesised mastery + diagnosed submissions (no runner needed; deterministic,
-idempotent; emails like aarav@class.dev, pw 'password'). The actual **pilot user
-study** (recruiting 20–40 students, 3–4 wk) is the team's research work, not code.
+for students. Dev demo data, two seeders (idempotent): `seed-cohort` fabricates 8 students with
+synthesised mastery rows (fast bulk, no runner; emails aarav@class.dev …), while
+`seed-demo` creates 3 *named team* students (Piyush/Vinit/Ketan @team.dev) by
+running **real curated submissions through the live runner→diagnosis→BKT
+pipeline** — so their misconceptions/mastery are genuinely produced by the system
+(see `seed/demo_team.py`). The live-demo script is `DEMO.md`. Since running a real
+pilot wasn't feasible, these seeded profiles stand in for study data. The actual
+**pilot user study** (20–40 students, 3–4 wk) is the team's research work, not code.
 Next up: **Phase 6 — Deployment + Paper**.
 
 ### Phase 4 — Personalization (DONE)

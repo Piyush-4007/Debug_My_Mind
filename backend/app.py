@@ -96,6 +96,13 @@ def _register_cli(app: Flask) -> None:
 
         run_cohort_seed()
 
+    @app.cli.command("seed-demo")
+    def seed_demo():
+        """Seed 3 named team students with genuine pipeline activity (DEV ONLY)."""
+        from seed.demo_team import run_demo_seed
+
+        run_demo_seed()
+
 
 # Module-level app for gunicorn ("gunicorn app:app") and `python app.py`.
 app = create_app()
