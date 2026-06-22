@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Problems from "./pages/Problems";
 import ProblemDetail from "./pages/ProblemDetail";
+import Dashboard from "./pages/Dashboard";
 
 export default function App() {
   return (
@@ -26,6 +27,14 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <ProblemDetail />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
               </ProtectedRoute>
             }
           />

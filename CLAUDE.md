@@ -30,7 +30,7 @@ Final-year project (Group 07). Target: IEEE conference paper + live demo.
 - `backend/runner`      sandboxed code execution        (Phase 2 ✓)
 - `backend/submissions` submit + grade + history         (Phase 2 ✓)
 - `backend/diagnosis`   AST + LLM hybrid engine          (Phase 3 ✓)
-- `backend/profile`     misconception log + knowledge tracing (Phase 4)
+- `backend/profile`     misconception log + knowledge tracing (Phase 4 ✓)
 - `backend/teacher`     class aggregation dashboards     (Phase 5)
 - `backend/models`      SQLAlchemy models (all 7 Phase-1 tables)
 - `backend/seed`        starter problem bank + misconception catalog
@@ -68,7 +68,21 @@ npm run dev
 - **Branches:** one feature branch per phase.
 
 ## Current Phase
-**Phase 3 — Diagnosis Engine (DONE).** When a submission fails, the hybrid
+**Phase 4 — Personalization (DONE).** `backend/profile` turns graded submissions
+into a per-student learning model. `tracing.py` runs **Bayesian Knowledge Tracing**
+(params p_init=.10, p_transit=.20, p_slip=.10, p_guess=.20; mastery threshold .85)
+— the submit endpoint calls `record_attempt(user_id, problem.concept, correct)`
+after grading, which upserts the `StudentProfile` row and advances `mastery_score`.
+`recommender.py` ranks unsolved problems weakest-concept-first, gentler difficulty
+first. Routes (`/api/profile`): `GET ""` (mastery per concept + stats + weak_spots),
+`GET /misconceptions` (the student's diagnosed-misconception log, aggregated by
+frequency), `GET /recommendations?limit=`. All personalization is defensive —
+failures never block grading. Frontend adds a `/dashboard` page (mastery bars,
+weak-spot chips, misconception log, recommended-problem cards) + Navbar links.
+Next up: **Phase 5 — Teacher Dashboard + Pilot**.
+
+### Phase 3 — Diagnosis Engine (DONE)
+When a submission fails, the hybrid
 engine (`backend/diagnosis`) names the misconception behind it and serves the
 linked micro-lesson. Pipeline: `ast_analyzer` (structural patterns + runtime-
 error signatures → candidate misconceptions with confidence) + `llm_client`
@@ -95,7 +109,7 @@ the client. Endpoints: `POST /api/problems/<slug>/submit`, `GET /api/submissions
 1. **Foundation** (wk 1–4) — done
 2. **Submit + Grade** (wk 5–7) — done — Monaco editor, sandboxed runner, pass/fail
 3. **Diagnosis Engine** (wk 8–12) — done — AST matchers + Gemini + hybrid verifier
-4. **Personalization** (wk 13–16) — misconception log, knowledge tracing, recommender
+4. **Personalization** (wk 13–16) — done — BKT knowledge tracing + misconception log + recommender
 5. **Teacher Dashboard + Pilot** (wk 17–20) — aggregation views + user study
 6. **Deployment + Paper** (wk 21–24) — Render/Vercel, IEEE paper, demo video
 

@@ -7,6 +7,7 @@ from flask_jwt_extended import get_jwt_identity, jwt_required
 from diagnosis import diagnose_submission
 from extensions import db
 from models import Problem, Submission
+from profile import record_attempt
 from runner import run_submission
 
 submissions_bp = Blueprint("submissions", __name__, url_prefix="/api")
@@ -61,6 +62,11 @@ def submit(slug: str):
 
     db.session.add(submission)
     db.session.commit()
+
+    # Phase 4: advance the student's BKT mastery for this problem's concept.
+    # A passed submission is a "correct" observation; anything else is wrong.
+    # Defensive inside record_attempt — never blocks the grading response.
+    record_attempt(user_id, problem.concept, correct=outcome["status"] == "passed")
 
     # Per-test results are returned live but not persisted in Phase 2.
     return (
