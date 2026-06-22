@@ -1,9 +1,14 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+
+  const navClass = ({ isActive }) =>
+    `rounded-lg px-3 py-1.5 font-medium transition ${
+      isActive ? "bg-violet/10 text-violet-bright" : "text-muted hover:text-ink"
+    }`;
 
   function handleLogout() {
     logout();
@@ -24,6 +29,14 @@ export default function Navbar() {
 
         {user && (
           <div className="flex items-center gap-3 text-sm">
+            <div className="hidden items-center gap-1 sm:flex">
+              <NavLink to="/" end className={navClass}>
+                Problems
+              </NavLink>
+              <NavLink to="/dashboard" className={navClass}>
+                Dashboard
+              </NavLink>
+            </div>
             <div className="hidden items-center gap-2 sm:flex">
               <span className="text-muted">{user.name}</span>
               <span className="rounded-full border border-violet/30 bg-violet/10 px-2 py-0.5 text-xs font-semibold capitalize text-violet-bright">
